@@ -17,7 +17,8 @@ model User {
   email     String   @unique
   name      String?
   gmCampaigns Campaign[]
-  campaigns CampaignPlayers[]
+  campaigns CampaignPlayer[]
+  characters Character[]
 }
 
 model Campaign {
@@ -26,13 +27,29 @@ model Campaign {
   name String
   gm   User @relation(fields: [gmId], references: [id])
   gmId Int @unique
-  players CampaignPlayers[]
+  players CampaignPlayer[]
+  characters CampaignCharacter[]
 }
 
-model CampaignPlayers {
+model CampaignPlayer {
   user User @relation(fields: [userId], references: [id])
   userId Int
   campaign Campaign @relation(fields: [campaignId], references: [id])
   campaignId Int
   @@id([userId, campaignId])
+}
+
+model Character {
+  id       Int   @id @default(autoincrement())
+  user User? @relation(fields: [userId], references: [id])
+  userId Int?
+  campaigns CampaignCharacter[]
+}
+
+model CampaignCharacter {
+  character Character @relation(fields: [characterId], references: [id])
+  characterId Int
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+  campaignId Int
+  @@id([characterId, campaignId])
 }
